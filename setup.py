@@ -5,9 +5,6 @@ import xlrd
 import subprocess
 from datetime import datetime as dt
 
-name_file = 'water_temp.xls'
-
-
 # Просмотр всех исторических данных в файле
 # (открыть документ excel со всеми записями)
 def open_file_8(name_file):
@@ -15,25 +12,7 @@ def open_file_8(name_file):
     subprocess.call(name_file, shell=True)
     print("Работа с файлом " + name_file + " закончена!")
 
-
-# Поиск исследований по дате
-def search_2(name_file, data_field):
-    # открываем файл
-    rb = xlrd.open_workbook(name_file, formatting_info=True)
-    # выбираем активный лист
-    sheet = rb.sheet_by_index(0)
-    flag = 0
-    # получаем значения всех записей таблицы
-    for i in range(sheet.nrows):
-        val = sheet.row_values(i)
-        if data_field == val[0]:
-            flag = 1
-            print('Запись найдена!')
-            print(val[0] + " температура воды равнялась " + str(val[1]) + " градусам.")
-    if flag == 0: print("Запись отсутствует, недостаточно исторических данных!")
-
-
-#
+# выборка исследований по интервалу дат
 def search_data_interval_3(name_file, min_data_field, max_data_field):
     # открываем файл
     rb = xlrd.open_workbook(name_file, formatting_info=True)
@@ -63,7 +42,7 @@ def search_data_interval_3(name_file, min_data_field, max_data_field):
     # открываем автоматически созданный файл
     open_file_8(new_file)
 
-
+# выборка исследований по интервалу температуры
 def filter_temp_water_4(name_file, min_temp_field, max_temp_field):
     # открываем файл
     rb = xlrd.open_workbook(name_file, formatting_info=True)
@@ -94,25 +73,6 @@ def filter_temp_water_4(name_file, min_temp_field, max_temp_field):
     open_file_8(new_file)
 
 
-def weather():
-    url = "http://api.openweathermap.org/data/2.5/weather"
-    city = "Sevastopol"
-    water_temp = 18.65  # str(data["water"]["temp"])# + "'С")
-    parameters = {
-        'q': city,
-        'appid': "778d98cf94b6609bec655b872f24b907",
-        'units': 'metric',
-        'lang': 'ru'
-    }
-    res = requests.get(url, params=parameters)
-    data = res.json()
-    print("Город: " + data["name"])
-    print("Состояние: " + data["weather"][0]["description"])
-    print("Текущая температура: " + str(data["main"]["temp"]) + "'С")
-    print("Скорость ветра: " + str(data["wind"]["speed"]) + " м/с")
-    print("Температура воды: " + str(water_temp) + "'С")
-
-
 def read_file(name_file):
     # открываем файл
     rb = xlrd.open_workbook(name_file, formatting_info=True)
@@ -138,8 +98,8 @@ def read_file(name_file):
           print('------')
     """
 
-
+# тестовые примеры
 # open_file_8('water_temp.xls')
 # search_2('water_temp.xls','05.01.2018')
 # search_data_interval_3('water_temp.xls', '10.05.2018', '10.10.2018')
-filter_temp_water_4('water_temp.xls', '10.05', '19.40')
+# filter_temp_water_4('water_temp.xls', '10.05', '19.40')
